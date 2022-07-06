@@ -2,10 +2,13 @@
 
 <head>
 	<title>疫情地区</title>
-	<link href="mdi_font/css/materialdesignicons.min.css" rel="stylesheet">
-	<link href="vuetify.min.css" rel="stylesheet">
-	<script src="vue.js"></script>
-	<script src="vuetify.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<meta property="og:image:width" content="1200">
+	<link href="static/mdi_font/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="static/vuetify.min.css" rel="stylesheet">
+	<script src="static/vue.js"></script>
+	<script src="static/vuetify.js"></script>
 	<style>
 		.v-sheet.v-card {
 			padding: 14px;
@@ -121,49 +124,61 @@
 			methods: {
 				multifilter(value, search, item) {
 					search = search.split(",")
-					// console.log(value, search, item)
 					if (search == [])
 						return false
 					for (i in search) {
 						if (value.indexOf(search[i]) !== -1)
 							return true
 					}
-					// return true
 				},
 
 
 			}
 		})
-		fetch("https://covid.myquark.cn/quark/covid/risk-area?format=json&method=Huoshenshan.riskArea").then(function (response) {
+		fetch("https://covid.myquark.cn/quark/covid/risk-area?format=json&method=Huoshenshan.riskArea")
+			.then(response => response.json())
+			.then(function (body) {
+				app.时间 = body.data.dateline[1]
+				let l = [];
+				for (i in body.data.map) {
+					let item = body.data.map[i]
+					for (i in item) {
+						item[i].forEach(element => {
 
-			return (response.json())
-		}).then(function (body) {
-			// app.高风险 = body.data.map[2]
-			// app.低风险 = body.data.map[1]
-			app.时间 = body.data.dateline[1]
-			console.log(body.data)
-			l = [];
-			for (i in body.data.map) {
-				let item = body.data.map[i]
-				for (i in item) {
-					item[i].forEach(element => {
-
-						l.push(element)
-					});
+							l.push(element)
+						});
+					}
 				}
-			}
-			app.l风险地区 = l
-			app.l人员.forEach(i => {
-				i.风险情况 = 计算风险地区(i.地址)
+				app.l风险地区 = l
+				app.l人员.forEach(i => {
+					i.风险情况 = 计算风险地区(i.地址)
+				})
 			})
-		})
 		// app.search =app.search.copyWithin()
-	let 搜索建议=[]
-	app.l人员.map(i => i.地址).forEach(s=>{
+		let 搜索建议 = []
+		app.l人员.map(i => i.地址).forEach(s => s = s.split(',').forEach(s => 搜索建议.push(s)))
+		app.搜索建议 = [...new Set(搜索建议)]
 
-		s = s.split(',').forEach(s =>搜索建议.push(s))
-	})
-		app.搜索建议 = [...new Set(搜索建议)] 
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function () {
+				navigator.serviceWorker
+					// 注册 service worker
+					.register('sw.js', {
+						scope: '/static/'
+					})
+					.then(function (registration) {
+						// 注册成功
+						// console.log(
+						//     'ServiceWorker registration successful with scope: ',
+						//     registration.scope
+						// );
+					})
+					.catch(function (err) {
+						// 注册失败:(
+						console.log('ServiceWorker注册失败: ', err);
+					});
+			});
+		}
 	</script>
 </body>
 
