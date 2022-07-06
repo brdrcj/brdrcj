@@ -27,7 +27,7 @@
 					<v-btn depressed color="primary" @click='localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)'>保存
 					</v-btn>
 					&nbsp;
-					<v-btn depressed color="primary" @click='app.l人员.push([])'>新增
+					<v-btn depressed color="primary" @click='app.l人员.push({})'>新增
 					</v-btn>
 				</v-card-title>
 				<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer>
@@ -61,6 +61,9 @@
 							</template>
 						</v-edit-dialog>
 					</template>
+					<template v-slot:item.操作="{ item }">
+						<v-icon small text @click="app.l人员.splice(app.l人员.indexOf(item), 1);">mdi-delete</v-icon>
+					 </template>
 				</v-data-table>
 			</v-card>
 			<v-card style="min-height: 50em;">
@@ -109,7 +112,8 @@
 				h人员: [{ text: '名称', value: '姓名', },
 				{ text: '地区', value: '地址' },
 				{ text: '风险区统计', value: '风险情况' },
-				{ text: '备注', value: '备注' }
+				{ text: '备注', value: '备注' },
+				{ text: '操作', value: '操作' },
 				],
 			}),
 			methods: {
