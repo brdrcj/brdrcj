@@ -30,7 +30,7 @@ self.addEventListener('fetch', function(event) {
     event.respondWith(
         caches.match(event.request).then(res => {
             if (res&&res.status == 200&&res.type=='basic') {
-                    console.log("已缓存", res.url,res);
+                    console.log("已缓存", res.url);
                 return res;
             }
             // 请求是一个流，只能使用一次，为了再次使用这里需要克隆
