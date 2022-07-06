@@ -103,17 +103,18 @@
 				时间: "",
 				search: [],
 				搜索建议: [],
+            
 				h风险地区: [
-					{ text: '省', value: 'province', },
-					{ text: '市', value: 'city' },
-					{ text: '等级', value: 'grade' },
-					{ text: '地址', value: 'addr' }
+					{ text: '省', value: 'province', sortable: false, },
+					{ text: '市', value: 'city', sortable: false, },
+					{ text: '等级', value: 'grade' , sortable: false,},
+					{ text: '地址', value: 'addr', sortable: false, }
 				],
-				h人员: [{ text: '名称', value: '姓名', },
-				{ text: '地区', value: '地址' },
-				{ text: '风险区统计', value: '风险情况' },
-				{ text: '备注', value: '备注' },
-				{ text: '操作', value: '操作' },
+				h人员: [{ text: '名称', value: '姓名', sortable: false,},
+				{ text: '地区', value: '地址' , sortable: false,},
+				{ text: '风险区统计', value: '风险情况', sortable: false, },
+				{ text: '备注', value: '备注' , sortable: false,},
+				{ text: '操作', value: '操作' , sortable: false,},
 				],
 			}),
 			methods: {
@@ -135,15 +136,20 @@
 			.then(function (body) {
 				app.时间 = body.data.dateline[1]
 				let l = [];
-				for (i in body.data.map) {
-					let item = body.data.map[i]
+					let item = body.data.map[2]
 					for (i in item) {
 						item[i].forEach(element => {
 
 							l.push(element)
 						});
 					}
-				}
+					 item = body.data.map[1]
+					for (i in item) {
+						item[i].forEach(element => {
+
+							l.push(element)
+						});
+					}
 				app.l风险地区 = l
 				app.l人员.forEach(i => {
 					i.风险情况 = 计算风险地区(i.地址)
