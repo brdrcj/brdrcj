@@ -1,0 +1,170 @@
+<html>
+
+<head>
+	<title>疫情地区</title>
+	<link href="mdi_font/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="vuetify.min.css" rel="stylesheet">
+	<script src="vue.js"></script>
+	<script src="vuetify.js"></script>
+	<style>
+		.v-sheet.v-card {
+			padding: 14px;
+			margin: 15px;
+		}
+	</style>
+</head>
+
+<body style="margin: 20px;">
+
+	<div id="app">
+		<v-app>
+			<v-card>
+				<v-card-title>
+					人员信息
+					<v-spacer></v-spacer>
+					<v-btn depressed color="primary" @click='localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)'>保存
+					</v-btn>
+					&nbsp;
+					<v-btn depressed color="primary" @click='app.l人员.push([])'>新增
+					</v-btn>
+				</v-card-title>
+				<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer>
+					<template v-slot:item.姓名="props">
+						<v-edit-dialog :return-value.sync="props.item.姓名">
+							{{ props.item.姓名||"-" }}
+							<template v-slot:input>
+								<v-text-field v-model="props.item.姓名" single-line></v-text-field>
+							</template>
+						</v-edit-dialog>
+					</template>
+					<template v-slot:item.地址="props">
+						<v-edit-dialog :return-value.sync="props.item.地址">
+							{{ props.item.地址||"-" }}
+							<template v-slot:input>
+								<v-text-field v-model="props.item.地址" single-line></v-text-field>
+							</template>
+						</v-edit-dialog>
+					</template>
+					<template v-slot:item.风险情况="{ item }">
+						<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
+							{{item.风险情况||0}}
+						</v-chip>
+
+					</template>
+					<template v-slot:item.备注="props">
+						<v-edit-dialog :return-value.sync="props.item.备注">
+							{{ props.item.备注||"-" }}
+							<template v-slot:input>
+								<v-text-field v-model="props.item.备注" single-line></v-text-field>
+							</template>
+						</v-edit-dialog>
+					</template>
+				</v-data-table>
+			</v-card>
+			<v-card style="min-height: 50em;">
+				<v-card-title>
+					风险地区:截至{{时间}}
+					<v-spacer></v-spacer>
+					<v-combobox v-model="search" append-icon="mdi-magnify" label="筛选" :items="搜索建议" multiple single-line
+						hide-details chips>
+					</v-combobox>
+				</v-card-title>
+				<v-data-table :headers="h风险地区" :items="l风险地区" :search="search.toString()" :items-per-page="2000"
+					:sort-by="['grade']" :sort-desc="[true]" hide-default-footer :custom-filter="multifilter">
+
+					<template v-slot:item.grade="{ item }">
+						<v-chip :color="['','orange','red'][item.grade]" dark>
+							{{ ['','中','高'][item.grade] }}
+						</v-chip>
+					</template>
+
+
+				</v-data-table>
+			</v-card>
+		</v-app>
+	</div>
+	<script type="text/javascript">
+		计算风险地区 = s => {
+			let sum = 0
+			s = s.split(',').forEach(s => sum += app.l风险地区.filter(e => e.addr.indexOf(s) > -1 || e.city.indexOf(s) > -1 || e.province.indexOf(s) > -1).length)
+			return sum
+		}
+		app = new Vue({
+			el: '#app',
+			vuetify: new Vuetify(),
+			data: () => ({
+				l风险地区: [],
+				l人员: JSON.parse(localStorage["yqdq_人员信息"] || "[]"),
+				时间: "",
+				search: [],
+				搜索建议: [],
+
+				// 				addr: "泉山区翟山街道花语社区花语城二期"
+				// city: "徐州"
+				// cityDateline: "1656935152"
+				// dateline: "1656935152"
+				// grade: "1"
+				// id: "3399"
+				// province: "江苏"
+				h风险地区: [
+					{ text: '省', value: 'province', },
+					{ text: '市', value: 'city' },
+					{ text: '等级', value: 'grade' },
+					{ text: '地址', value: 'addr' }
+				],
+				h人员: [{ text: '名称', value: '姓名', },
+				{ text: '地区', value: '地址' },
+				{ text: '风险区统计', value: '风险情况' },
+				{ text: '备注', value: '备注' }
+				],
+			}),
+			methods: {
+				multifilter(value, search, item) {
+					search = search.split(",")
+					// console.log(value, search, item)
+					if (search == [])
+						return false
+					for (i in search) {
+						if (value.indexOf(search[i]) !== -1)
+							return true
+					}
+					// return true
+				},
+
+
+			}
+		})
+		fetch("https://covid.myquark.cn/quark/covid/risk-area?format=json&method=Huoshenshan.riskArea").then(function (response) {
+
+			return (response.json())
+		}).then(function (body) {
+			// app.高风险 = body.data.map[2]
+			// app.低风险 = body.data.map[1]
+			app.时间 = body.data.dateline[1]
+			console.log(body.data)
+			l = [];
+			for (i in body.data.map) {
+				let item = body.data.map[i]
+				for (i in item) {
+					item[i].forEach(element => {
+
+						l.push(element)
+					});
+				}
+			}
+			app.l风险地区 = l
+			app.l人员.forEach(i => {
+				i.风险情况 = 计算风险地区(i.地址)
+			})
+		})
+		// app.search =app.search.copyWithin()
+	let 搜索建议=[]
+	app.l人员.map(i => i.地址).forEach(s=>{
+
+		s = s.split(',').forEach(s =>搜索建议.push(s))
+	})
+		app.搜索建议 = [...new Set(搜索建议)] 
+	</script>
+</body>
+
+</html>
