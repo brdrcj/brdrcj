@@ -31,7 +31,7 @@ self.addEventListener('fetch', function(event) {
         caches.match(event.request).then(res => {
             if (res) {
                 setTimeout(() => {
-                    console.log("已缓存", res.url);
+                    console.log("已缓存", res.url,res);
 
                 }, 0)
                 return res;
