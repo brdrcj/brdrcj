@@ -31,7 +31,7 @@ self.addEventListener('fetch', function(event) {
         caches.match(event.request).then(res => {
             if (res) {
                 setTimeout(() => {
-                    console.log("已缓存", res.url,res.toString());
+                    console.log("已缓存", res.url,res);
 
                 }, 0)
                 return res;
@@ -41,7 +41,7 @@ self.addEventListener('fetch', function(event) {
             // 针对缓存中没有存在资源这里重新请求一下
             return fetch(requestToCache).then(res => {
                 // 不缓存
-                if (!res || res.status !== 200||res.type=='cors') {
+                if (!res || res.status !== 200||res.type!='basic') {
                     setTimeout(() => {
                         console.log("下载但不缓存", res.url);
 
