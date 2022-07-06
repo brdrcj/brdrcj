@@ -26,7 +26,7 @@
 				<v-btn depressed color="primary" @click='localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)'>保存
 				</v-btn>
 				&nbsp;
-				<v-btn depressed color="primary" @click='app.l人员.push({})'>新增
+				<v-btn depressed color="primary" @click='app.l人员.push({风险情况:0})'>新增
 				</v-btn>
 			</v-card-title>
 			<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer style="margin: 10px;">
@@ -48,7 +48,7 @@
 				</template>
 				<template v-slot:item.风险情况="{ item }">
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
-						{{item.风险情况||0}}
+						{{item.风险情况}}
 					</v-chip>
 
 				</template>
