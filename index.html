@@ -48,7 +48,7 @@
 				</template>
 				<template v-slot:item.风险情况="{ item }">
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
-						{{item.风险情况}}
+						{{item.风险情况||0}}
 					</v-chip>
 
 				</template>
