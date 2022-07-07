@@ -3,16 +3,16 @@
 <head>
 	<title>疫情地区</title>
 	<meta charset="utf-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<link href="static/mdi_font/css/materialdesignicons.min.css" rel="stylesheet">
 	<link href="static/vuetify.min.css" rel="stylesheet">
 	<script src="static/vue.js"></script>
 	<script src="static/vuetify.js"></script>
 	<style>
-		/* .v-sheet.v-card {
-			padding: 14px;
-			margin: 15px;
-		} */
+		input {
+			border-radius: 0;
+			width: 100%;
+		}
 	</style>
 </head>
 
@@ -31,20 +31,11 @@
 			</v-card-title>
 			<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer style="margin: 10px;">
 				<template v-slot:item.姓名="props">
-					<v-edit-dialog :return-value.sync="props.item.姓名">
-						{{ props.item.姓名||"-" }}
-						<template v-slot:input>
-							<v-text-field v-model="props.item.姓名" single-line></v-text-field>
-						</template>
-					</v-edit-dialog>
+					<input v-model="props.item.姓名"></input>
+				</template>
 				</template>
 				<template v-slot:item.地址="props">
-					<v-edit-dialog :return-value.sync="props.item.地址">
-						{{ props.item.地址||"-" }}
-						<template v-slot:input>
-							<v-text-field v-model="props.item.地址" single-line></v-text-field>
-						</template>
-					</v-edit-dialog>
+					<input v-model="props.item.地址"></input>
 				</template>
 				<template v-slot:item.风险情况="{ item }">
 					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);">mdi-delete</v-icon>
