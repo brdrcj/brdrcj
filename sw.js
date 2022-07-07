@@ -1,11 +1,11 @@
-const SW_VERSION = '11';
+const SW_VERSION = '12';
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
     event.waitUntil(self.skipWaiting());
 });
 
 // 监听 service workers 更新时间
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
     // console.log('sw.js 更新');
     event.waitUntil(
         Promise.all([
@@ -26,11 +26,11 @@ self.addEventListener('activate', function(event) {
 });
 
 // 缓存请求
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
     event.respondWith(
         caches.match(event.request).then(res => {
-            if (res&&res.status == 200&&res.type=='basic') {
-                    console.log("已缓存", res.url);
+            if (res && res.status == 200 && res.type == 'basic') {
+                console.log("已缓存", res.url);
                 return res;
             }
             // 请求是一个流，只能使用一次，为了再次使用这里需要克隆

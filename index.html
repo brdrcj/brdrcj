@@ -12,6 +12,7 @@
 		input {
 			width: 100%;
 		}
+
 		.v-data-table__mobile-row__cell input {
 			text-align: right;
 		}
@@ -31,11 +32,11 @@
 			</v-card-title>
 			<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer style="margin: 10px;">
 				<template v-slot:item.姓名="props">
-					<input v-model="props.item.姓名"  @change="保存()"></input>
+					<input v-model="props.item.姓名" @change="保存()"></input>
 				</template>
 				</template>
 				<template v-slot:item.地址="{ item }">
-					<input v-model="item.地址"  @change="item.风险情况 = 计算风险地区(item.地址);保存()"></input>
+					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item.地址);保存()"></input>
 				</template>
 				<template v-slot:item.功能="{ item }">
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
@@ -75,13 +76,14 @@
 			return sum
 		}
 		更新全部风险地区 = () => {
-		app.l人员.forEach(i => {
-					i.风险情况 = 计算风险地区(i.地址)
-				})
-			}
+			app.l人员.forEach(i => {
+				i.风险情况 = 计算风险地区(i.地址)
+			})
+			生成搜索建议()
+		}
 		保存 = () => {
-			localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)
-			}
+			localStorage["yqdq_人员信息"] = JSON.stringify(app.l人员)
+		}
 		app = new Vue({
 			el: '#app',
 			vuetify: new Vuetify(),
@@ -140,10 +142,12 @@
 				更新全部风险地区()
 			})
 		// app.search =app.search.copyWithin()
-		let 搜索建议 = []
-		app.l人员.map(i => i.地址).forEach(s => s = s.split(',').forEach(s => 搜索建议.push(s)))
-		app.搜索建议 = [...new Set(搜索建议)]
+		生成搜索建议 = () => {
 
+			let 搜索建议 = []
+			app.l人员.map(i => i.地址).forEach(s => s = s.split(',').forEach(s => 搜索建议.push(s)))
+			app.搜索建议 = [...new Set(搜索建议)]
+		}
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function () {
 				navigator.serviceWorker
