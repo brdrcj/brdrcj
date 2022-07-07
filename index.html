@@ -23,27 +23,23 @@
 			<v-card-title>
 				人员信息
 				<v-spacer></v-spacer>
-				<v-btn depressed color="primary" @click='localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)'>保存
-				</v-btn>
 				&nbsp;
 				<v-btn depressed color="primary" @click='app.l人员.push({风险情况:0})'>新增
 				</v-btn>
 			</v-card-title>
 			<v-data-table :headers="h人员" :items="l人员" :items-per-page="2000" hide-default-footer style="margin: 10px;">
 				<template v-slot:item.姓名="props">
-					<input v-model="props.item.姓名"></input>
+					<input v-model="props.item.姓名"  @change="保存()"></input>
 				</template>
 				</template>
-				<template v-slot:item.地址="props">
-					<input v-model="props.item.地址"></input>
-				</template>
-				<template v-slot:item.风险情况="{ item }">
-					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);">mdi-delete</v-icon>
-
+				<template v-slot:item.地址="{ item }">
+					<input v-model="item.地址"  @change="item.风险情况 = 计算风险地区(item.地址);保存()"></input>
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
 						{{item.风险情况||0}}
 					</v-chip>
-
+				</template>
+				<template v-slot:item.风险情况="{ item }">
+					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);保存()">mdi-delete</v-icon>
 				</template>
 			</v-data-table>
 
@@ -76,6 +72,14 @@
 			s = s.split(',').forEach(s => sum += app.l风险地区.filter(e => e.addr.indexOf(s) > -1 || e.city.indexOf(s) > -1 || e.province.indexOf(s) > -1).length)
 			return sum
 		}
+		更新全部风险地区 = () => {
+		app.l人员.forEach(i => {
+					i.风险情况 = 计算风险地区(i.地址)
+				})
+			}
+		保存 = () => {
+			localStorage["yqdq_人员信息"]=JSON.stringify(app.l人员)
+			}
 		app = new Vue({
 			el: '#app',
 			vuetify: new Vuetify(),
@@ -131,9 +135,7 @@
 					});
 				}
 				app.l风险地区 = l
-				app.l人员.forEach(i => {
-					i.风险情况 = 计算风险地区(i.地址)
-				})
+				更新全部风险地区()
 			})
 		// app.search =app.search.copyWithin()
 		let 搜索建议 = []
