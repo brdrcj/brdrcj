@@ -10,8 +10,10 @@
 	<script src="static/vuetify.js"></script>
 	<style>
 		input {
-			border-radius: 0;
 			width: 100%;
+		}
+		.v-data-table__mobile-row__cell input {
+			text-align: right;
 		}
 	</style>
 </head>
@@ -34,11 +36,11 @@
 				</template>
 				<template v-slot:item.地址="{ item }">
 					<input v-model="item.地址"  @change="item.风险情况 = 计算风险地区(item.地址);保存()"></input>
+				</template>
+				<template v-slot:item.功能="{ item }">
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
 						{{item.风险情况||0}}
 					</v-chip>
-				</template>
-				<template v-slot:item.风险情况="{ item }">
 					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);保存()">mdi-delete</v-icon>
 				</template>
 			</v-data-table>
@@ -96,9 +98,9 @@
 					{ text: '等级', value: 'grade', sortable: false, },
 					{ text: '地址', value: 'addr', sortable: false, }
 				],
-				h人员: [{ text: '名称', value: '姓名', sortable: false, },
+				h人员: [{ text: '出行计划', value: '姓名', sortable: false, },
 				{ text: '地区', value: '地址', sortable: false, },
-				{ text: '功能', value: '风险情况', sortable: false, },
+				{ text: '功能', value: '功能', sortable: false, },
 				],
 			}),
 			methods: {
