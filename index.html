@@ -3,7 +3,7 @@
 <head>
 	<title>疫情地区</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<link href="static/mdi_font/css/materialdesignicons.min.css" rel="stylesheet">
 	<link href="static/vuetify.min.css" rel="stylesheet">
 	<script src="static/vue.js"></script>
@@ -47,21 +47,12 @@
 					</v-edit-dialog>
 				</template>
 				<template v-slot:item.风险情况="{ item }">
+					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);">mdi-delete</v-icon>
+
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
 						{{item.风险情况||0}}
 					</v-chip>
 
-				</template>
-				<template v-slot:item.备注="props">
-					<v-edit-dialog :return-value.sync="props.item.备注">
-						{{ props.item.备注||"-" }}
-						<template v-slot:input>
-							<v-text-field v-model="props.item.备注" single-line></v-text-field>
-						</template>
-					</v-edit-dialog>
-				</template>
-				<template v-slot:item.操作="{ item }">
-					<v-icon large text @click="app.l人员.splice(app.l人员.indexOf(item), 1);">mdi-delete</v-icon>
 				</template>
 			</v-data-table>
 
@@ -74,8 +65,9 @@
 					hide-details chips>
 				</v-combobox>
 			</v-card-title>
-			<v-data-table :headers="h风险地区" :items="l风险地区" :search="search.toString()" :items-per-page="2000" style="margin: 10px;"
-				:sort-by="['grade']" :sort-desc="[true]" hide-default-footer :custom-filter="multifilter">
+			<v-data-table :headers="h风险地区" :items="l风险地区" :search="search.toString()" :items-per-page="2000"
+				style="margin: 10px;" :sort-by="['grade']" :sort-desc="[true]" hide-default-footer
+				:custom-filter="multifilter">
 
 				<template v-slot:item.grade="{ item }">
 					<v-chip :color="['','orange','red'][item.grade]" dark>
@@ -111,8 +103,7 @@
 				],
 				h人员: [{ text: '名称', value: '姓名', sortable: false, },
 				{ text: '地区', value: '地址', sortable: false, },
-				{ text: '统计', value: '风险情况', sortable: false, },
-				{ text: '删除', value: '操作', sortable: false, },
+				{ text: '功能', value: '风险情况', sortable: false, },
 				],
 			}),
 			methods: {
