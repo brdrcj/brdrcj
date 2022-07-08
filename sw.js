@@ -1,17 +1,12 @@
 importScripts('https://g.alicdn.com/kg/workbox/3.3.0/workbox-sw.js');
 workbox.setConfig({
-  debug: true,
-  modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
+    debug: true,
+    modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
 });
 
 // To avoid async issues, we load core before we call it in the callback
-workbox.loadModule('workbox-core');
-//设置缓存cachestorage的名称
-workbox.core.setCacheNameDetails({
-    prefix: 'yqtj',
-    suffix: 'v1'
-});
-
+workbox.skipWaiting();
+workbox.clientsClaim();
 workbox.routing.registerRoute(
     new RegExp('/'),
     workbox.strategies.staleWhileRevalidate({
@@ -33,5 +28,3 @@ workbox.routing.registerRoute(
         ]
     })
 );
-workbox.skipWaiting();
-workbox.clientsClaim();
