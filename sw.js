@@ -26,17 +26,34 @@ workbox.routing.registerRoute(
     })
 );
 workbox.routing.registerRoute(
-    function(event) {
+    function (event) {
         console.log(event.url.pathname)
-          if (event.url.pathname=="/") return true;
-          return false;
-      },
+        if (["/", '/tb.png', '/manifest.json'].indexOf(event.url.pathname) > -1) return true;
+        return false;
+    },
     workbox.strategies.staleWhileRevalidate({
         //cache名称
-        cacheName: 'html', 
+        cacheName: 'html',
         plugins: [
             new workbox.expiration.Plugin({
                 maxEntries: 20
+            })
+        ]
+    })
+);
+workbox.routing.registerRoute(
+    function (event) {
+        // 需要缓存的HTML路径列表
+        if (event.url.host === 'covid.myquark.cn')
+            return true;
+        return false;
+
+    },
+    workbox.strategies.networkFirst({
+        cacheName: 'api',
+        plugins: [
+            new workbox.expiration.Plugin({
+                maxEntries: 10
             })
         ]
     })
