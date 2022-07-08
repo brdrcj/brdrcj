@@ -20,7 +20,7 @@ workbox.routing.registerRoute(
     new RegExp('/'),
     workbox.strategies.staleWhileRevalidate({
         //cache名称
-        cacheName: 'lf-sw:static',
+        cacheName: 'html',
         plugins: [
             new workbox.expiration.Plugin({
                 //cache最大数量
@@ -32,7 +32,7 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
     new RegExp('/static/.+'),
     workbox.strategies.cacheFirst({
-        cacheName: 'lf-sw:img',
+        cacheName: 'static',
         plugins: [
             //如果要拿到域外的资源，必须配置
             //因为跨域使用fetch配置了
