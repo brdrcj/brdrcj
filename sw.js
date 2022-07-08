@@ -1,6 +1,6 @@
 
 importScripts(
-    "/static/workbox.js"
+    "https://cdn.jsdelivr.net/npm/workbox-cdn/workbox/workbox-sw.js"
 );
 if (workbox) {
     console.log('workbox加载成功');
@@ -8,6 +8,13 @@ if (workbox) {
     console.log('workbox加载失败');
 }
 
+// Note: Ignore the error that Glitch raises about workbox being undefined.
+workbox.setConfig({
+    debug: true,
+  });
+  
+  // To avoid async issues, we load core before we call it in the callback
+  workbox.loadModule('workbox-core');
 //设置缓存cachestorage的名称
 workbox.core.setCacheNameDetails({
     prefix:'yqtj',
