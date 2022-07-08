@@ -8,23 +8,7 @@ workbox.setConfig({
 workbox.skipWaiting();
 workbox.clientsClaim();
 workbox.routing.registerRoute(
-    function(event) {
-        console.log(event.url.pathname)
-          if (event.url.pathname=="/") return true;
-          return false;
-      },
-    workbox.strategies.staleWhileRevalidate({
-        //cache名称
-        cacheName: 'html', 
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 20
-            })
-        ]
-    })
-);
-workbox.routing.registerRoute(
-    new RegExp('/static/.+'),
+    new RegExp('/static/'),
     workbox.strategies.cacheFirst({
         cacheName: 'static',
         plugins: [
@@ -37,6 +21,22 @@ workbox.routing.registerRoute(
             new workbox.expiration.Plugin({
                 maxEntries: 30,
                 maxAgeSeconds: 12 * 60 * 60
+            })
+        ]
+    })
+);
+workbox.routing.registerRoute(
+    function(event) {
+        console.log(event.url.pathname)
+          if (event.url.pathname=="/") return true;
+          return false;
+      },
+    workbox.strategies.staleWhileRevalidate({
+        //cache名称
+        cacheName: 'html', 
+        plugins: [
+            new workbox.expiration.Plugin({
+                maxEntries: 20
             })
         ]
     })
