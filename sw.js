@@ -27,7 +27,7 @@ workbox.routing.registerRoute(
 );
 workbox.routing.registerRoute(
     function (event) {
-        console.log(event.url.pathname)
+        // console.log(event.url.pathname)
         if (["/", '/tb.png', '/manifest.json'].indexOf(event.url.pathname) > -1) return true;
         return false;
     },
