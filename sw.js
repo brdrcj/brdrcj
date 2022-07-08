@@ -21,8 +21,6 @@ workbox.core.setCacheNameDetails({
     suffix:'v1'
 });
 
-workbox.skipWaiting();
-workbox.clientsClaim();
 workbox.routing.registerRoute(
     new RegExp('/'),
     workbox.strategies.staleWhileRevalidate({
@@ -55,3 +53,5 @@ workbox.routing.registerRoute(
         ]
     })
 );
+workbox.core.skipWaiting();
+workbox.core.clientsClaim();
