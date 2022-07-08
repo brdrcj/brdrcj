@@ -8,10 +8,19 @@ workbox.setConfig({
 workbox.skipWaiting();
 workbox.clientsClaim();
 workbox.routing.registerRoute(
-    new RegExp('/'),
+    function(event) {
+        console.log(event.url.pathname)
+          if (event.url.pathname=="/") return true;
+          return false;
+      },
     workbox.strategies.staleWhileRevalidate({
         //cache名称
-        cacheName: 'html',
+        cacheName: 'html', 
+        plugins: [
+            new workbox.expiration.Plugin({
+                maxEntries: 20
+            })
+        ]
     })
 );
 workbox.routing.registerRoute(
@@ -24,6 +33,10 @@ workbox.routing.registerRoute(
             //mode: 'no-cors',所以status返回值为0，故而需要兼容
             new workbox.cacheableResponse.Plugin({
                 statuses: [0, 200]
+            }),
+            new workbox.expiration.Plugin({
+                maxEntries: 30,
+                maxAgeSeconds: 12 * 60 * 60
             })
         ]
     })
