@@ -32,6 +32,7 @@
 		th:nth-child(2) {
 			min-width: 8em;
 		}
+
 		th:nth-child(1) {
 			min-width: 6em;
 		}
@@ -45,6 +46,11 @@
 			<v-card-title>
 				人员信息
 				<v-spacer></v-spacer>
+				<v-btn depressed color="primary" @click='导出()'>导出
+				</v-btn>
+				&nbsp;
+				<v-btn depressed color="primary" @click='导入()'>导入
+				</v-btn>
 				&nbsp;
 				<v-btn depressed color="primary" @click='app.l人员.push({风险情况:0})'>新增
 				</v-btn>
@@ -58,7 +64,7 @@
 					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item.地址);保存()"></input>
 				</template>
 				<template v-slot:item.功能="{ item }">
-					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark  @click="删除 (item)">
+					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark @click="删除 (item)">
 						{{item.风险情况||0}}
 					</v-chip>
 				</template>
@@ -101,6 +107,16 @@
 		}
 		保存 = () => {
 			localStorage["yqdq_人员信息"] = JSON.stringify(app.l人员)
+		}
+		导出 = () => {
+			prompt('', localStorage['yqdq_人员信息'])
+		}
+		导入 = () => {
+			let read = prompt()
+			if (read){
+				localStorage['yqdq_人员信息'] = read
+				app.l人员= JSON.parse(localStorage["yqdq_人员信息"])
+			}
 		}
 		删除 = (item) => {
 			if (confirm("确认删除[" + item.姓名 + "]?")) {
