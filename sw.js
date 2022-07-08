@@ -11,14 +11,15 @@ if (workbox) {
 // Note: Ignore the error that Glitch raises about workbox being undefined.
 workbox.setConfig({
     debug: true,
-  });
-  
-  // To avoid async issues, we load core before we call it in the callback
-  workbox.loadModule('workbox-core');
+    modulePathPrefix: 'https://cdn.jsdelivr.net/npm/workbox-cdn/workbox/'
+});
+
+// To avoid async issues, we load core before we call it in the callback
+workbox.loadModule('workbox-core');
 //设置缓存cachestorage的名称
 workbox.core.setCacheNameDetails({
-    prefix:'yqtj',
-    suffix:'v1'
+    prefix: 'yqtj',
+    suffix: 'v1'
 });
 
 workbox.routing.registerRoute(
