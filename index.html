@@ -34,6 +34,10 @@
 		th:nth-child(1) {
 			min-width: 6em;
 		}
+
+		.v-radio {
+			min-width: 6em;
+		}
 	</style>
 </head>
 
@@ -62,10 +66,13 @@
 				<template v-slot:item.地址="{ item }">
 					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item);保存()"></input>
 				</template>
-				<template v-slot:item.功能="{ item }">
-					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark @click="删除 (item)">
+				<template v-slot:item.风险情况="{ item }">
+					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
 						{{item.风险情况||0}}
 					</v-chip>
+				</template>
+				<template v-slot:item.功能="{ item }">
+					<v-icon large text @click="删除 (item)">mdi-delete</v-icon>
 				</template>
 			</v-data-table>
 
@@ -74,12 +81,12 @@
 			<v-card-title>
 				风险地区
 				<v-spacer></v-spacer>
-			<v-radio-group v-model="search" row>
-				<v-radio label="无" value=""></v-radio>
-				<template v-for="label in 搜索建议">
-					<v-radio :label="label" :value="label"></v-radio>
-				</template>
-			</v-radio-group>
+				<v-radio-group v-model="search" row>
+					<v-radio label="无" value=""></v-radio>
+					<template v-for="label in 搜索建议">
+						<v-radio :label="label" :value="label"></v-radio>
+					</template>
+				</v-radio-group>
 			</v-card-title>
 			<v-data-table :headers="h风险地区" :items="l风险地区" :search="search" :items-per-page="2000" style="margin: 10px;"
 				:sort-by="['grade']" :sort-desc="[true]" hide-default-footer>
@@ -110,6 +117,7 @@
 				i.风险情况 = 计算风险地区(i)
 			})
 			生成搜索建议()
+			保存()
 		}
 		保存 = () => {
 			localStorage["yqdq_人员信息"] = JSON.stringify(app.l人员)
@@ -149,6 +157,7 @@
 				],
 				h人员: [{ text: '出行计划', value: '姓名', sortable: false, },
 				{ text: '地区', value: '地址', sortable: false, },
+				{ text: '风险情况', value: '风险情况', sortable: false, },
 				{ text: '功能', value: '功能', sortable: false, },
 				],
 			}),
