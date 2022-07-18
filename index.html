@@ -36,7 +36,7 @@
 		}
 
 		.v-radio {
-			min-width: 6em;
+			min-width: 8em;
 		}
 	</style>
 </head>
@@ -82,7 +82,7 @@
 				风险地区
 				<v-spacer></v-spacer>
 				<v-radio-group v-model="search" row>
-					<v-radio label="全部" value=""></v-radio>
+					<v-radio :label="'全部('+l风险地区.length+')'" value=""></v-radio>
 					<template v-for="label in 搜索建议">
 						<v-radio v-if="地区风险数量[label]!=0" :label="label+'('+地区风险数量[label]+')'" :value="label"></v-radio>
 					</template>
