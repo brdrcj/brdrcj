@@ -64,7 +64,7 @@
 				</template>
 				</template>
 				<template v-slot:item.地址="{ item }">
-					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item)"></input>
+					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item);生成搜索建议();保存()"></input>
 				</template>
 				<template v-slot:item.风险情况="{ item }">
 					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
@@ -113,13 +113,15 @@
 					sum += length
 				}
 			)
-			生成搜索建议()
-			保存()
+			
 			return sum
 		}
 		更新全部风险地区 = () => {
 			app.l人员.forEach(i => {
+			let 前一风险情况=	i.风险情况
 				i.风险情况 = 计算风险地区(i)
+				let 变化=-前一风险情况+i.风险情况
+				i.变化=变化==0?"":变化<0?变化:'+'+变化
 			})
 			生成搜索建议()
 			保存()
@@ -169,7 +171,8 @@
 				],
 				h人员: [{ text: '出行计划', value: '姓名', sortable: false, },
 				{ text: '地区', value: '地址', sortable: false, },
-				{ text: '风险情况', value: '风险情况', sortable: false, },
+				{ text: '情况', value: '风险情况', sortable: false, },
+				{ text: '变化', value: '变化', sortable: false, },
 				{ text: '功能', value: '功能', sortable: false, },
 				],
 			}),
