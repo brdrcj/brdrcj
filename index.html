@@ -67,9 +67,13 @@
 					<input v-model="item.地址" @change="item.风险情况 = 计算风险地区(item);生成搜索建议();保存()"></input>
 				</template>
 				<template v-slot:item.风险情况="{ item }">
-					<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
-						{{item.风险情况||0}}
-					</v-chip>
+
+					<v-badge bordered :content="item.变化<0?item.变化:'+'+item.变化" :value="item.变化"
+						:color="item.变化===0?'green':item.变化<0?'green':'red'" overlap>
+						<v-chip :color="item.风险情况===0?'green':item.风险情况<5?'orange':'red'" dark>
+							{{item.风险情况||0}}
+						</v-chip>
+					</v-badge>
 				</template>
 				<template v-slot:item.功能="{ item }">
 					<v-icon large text @click="删除 (item)">mdi-delete</v-icon>
@@ -107,21 +111,22 @@
 
 			let sum = 0
 			i.地址.split(',').forEach(
-				s => {let length=app.l风险地区.filter(
+				s => {
+					let length = app.l风险地区.filter(
 						e => e.addr.indexOf(s) > -1 || e.city.indexOf(s) > -1 || e.province.indexOf(s) > -1).length
-						app.地区风险数量[s]=length
+					app.地区风险数量[s] = length
 					sum += length
 				}
 			)
-			
+
 			return sum
 		}
 		更新全部风险地区 = () => {
 			app.l人员.forEach(i => {
-			let 前一风险情况=	i.风险情况
+				let 前一风险情况 = i.风险情况
 				i.风险情况 = 计算风险地区(i)
-				let 变化=-前一风险情况+i.风险情况
-				i.变化=变化==0?"":变化<0?变化:'+'+变化
+				let 变化 = -前一风险情况 + i.风险情况
+				i.变化 = 变化
 			})
 			生成搜索建议()
 			保存()
@@ -172,7 +177,7 @@
 				h人员: [{ text: '出行计划', value: '姓名', sortable: false, },
 				{ text: '地区', value: '地址', sortable: false, },
 				{ text: '情况', value: '风险情况', sortable: false, },
-				{ text: '变化', value: '变化', sortable: false, },
+				// { text: '变化', value: '变化', sortable: false, },
 				{ text: '功能', value: '功能', sortable: false, },
 				],
 			}),
