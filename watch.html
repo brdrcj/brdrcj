@@ -108,7 +108,7 @@
                 }
                 function format(b) {
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1");
-                    var a = String(b % 100);
+                    var a = String(parseInt((b % 1000)/10));
                     while (a.length < 2) {
                         a = "0" + a
                     }
