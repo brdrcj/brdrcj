@@ -9,9 +9,39 @@
     <meta name="applicable-device" content="pc,mobile">
     <meta name="format-detection" content="telephone=no">
     <title>秒表</title>
+    <style>
+        html {
+            background: black;
 
-    <link href="./stopwatch/style.css" rel="stylesheet" type="text/css">
-    <link href="./stopwatch/miaobiao.css" rel="stylesheet" type="text/css">
+            text-align: center;
+        }
+
+        #splitbutton,
+        #startstopbutton,
+        #resetbutton,
+        #split {
+            font-size: 22px;
+            vertical-align: middle;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #split {
+            color: white;
+        }
+
+        #disp {
+            font-size: 48px;
+            vertical-align: middle;
+            text-align: center;
+            background-color: #000;
+            color: white;
+            font-weight: 900;
+            border: 1px solid red;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
 
 </head>
 
@@ -20,7 +50,7 @@
         <div id="miaobiao_k">
             <form name="stopwatch" id="stopwatch" title="Stopwatch">
                 <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.000">
-                    <br>
+                <br>
                 <input type="button" onclick="stopstart()" onfocus="this.blur()" name="startstopbutton"
                     id="startstopbutton" title="开始 / 停止" value="开始">
                 <input type="button" onclick="dosplit()" onfocus="this.blur()" name="splitbutton" id="splitbutton"
@@ -54,7 +84,7 @@
                     if (0 !== m_t[2]) {
                         document.getElementById("split").innerHTML += (m_t[7]++) + " 计次: " + format(m_t[1] - m_t[0]) + "<br>"
                     }
-                    var msg = new SpeechSynthesisUtterance(format4speak( m_t[1] - m_t[0]))
+                    var msg = new SpeechSynthesisUtterance(format4speak(m_t[1] - m_t[0]))
                     msg.rate = 1.5
                     window.speechSynthesis.speak(msg);
                 }
@@ -84,15 +114,16 @@
                     return c
                 }
                 function format4speak(b) {
-                    return format(b).
-                            // replace(/:0/g, ":").
-                            replace(":", "时").
-                            replace(":", "分").
-                            replace(/\..+/, "秒").
-                            replace("00时", "").
-                            replace("00分", "").
-                            replace("00秒", "").
-                            replace(/^0/, "")
+                    let result = format(b).
+                        // replace(/:0/g, ":").
+                        replace(":", "时").
+                        replace(":", "分").
+                        replace(/\./, "秒").
+                        replace("00时", "").
+                        replace("00分", "").
+                        replace("00秒", "").
+                        replace(/^0/, "")
+                    return result+"毫秒"
                 }
                 function load() {
                     m_t[5] = new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
