@@ -26,6 +26,11 @@
             font-weight: bold;
         }
 
+        input[type=button] {
+            padding: 10px;
+            margin: 10px;
+        }
+
         #split {
             color: white;
         }
@@ -49,14 +54,11 @@
     <div id="main_content">
         <div id="miaobiao_k">
             <form name="stopwatch" id="stopwatch" title="Stopwatch">
-                <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.000">
+                <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.00">
                 <br>
-                <input type="button" onclick="stopstart()" onfocus="this.blur()" name="startstopbutton"
-                    id="startstopbutton" title="开始 / 停止" value="开始">
-                <input type="button" onclick="dosplit()" onfocus="this.blur()" name="splitbutton" id="splitbutton"
-                    title="计次" value="计次">
-                <input type="button" onclick="reset_it()" onfocus="this.blur()" name="resetbutton" id="resetbutton"
-                    title="清除" value="清除">
+                <input type="button" onclick="stopstart()" id="startstopbutton" value="开始">
+                <input type="button" onclick="dosplit()" id="splitbutton" value="计次">
+                <input type="button" onclick="reset_it()" id="resetbutton" value="清除">
             </form>
             <div id="split"></div>
             <!-- <script type="text/javascript" async src="./stopwatch/miaobiao.js"></script> -->
@@ -106,8 +108,8 @@
                 }
                 function format(b) {
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1");
-                    var a = String(b % 1000);
-                    while (a.length < 3) {
+                    var a = String(b % 100);
+                    while (a.length < 2) {
                         a = "0" + a
                     }
                     c += "." + a;
@@ -123,7 +125,7 @@
                         replace("00分", "").
                         replace("00秒", "").
                         replace(/^0/, "")
-                    return result+"毫秒"
+                    return result 
                 }
                 function load() {
                     m_t[5] = new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
