@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="format-detection" content="telephone=no">
+    <title>秒表</title>
+
+    <link href="./stopwatch/style.css" rel="stylesheet" type="text/css">
+    <link href="./stopwatch/miaobiao.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+    <div id="main_content">
+        <div id="miaobiao_k">
+            <form name="stopwatch" id="stopwatch" title="Stopwatch">
+                <input type="button" onclick="stopstart()" onfocus="this.blur()" name="startstopbutton"
+                    id="startstopbutton" title="开始 / 停止" value="开始">
+                <input type="button" onclick="dosplit()" onfocus="this.blur()" name="splitbutton" id="splitbutton"
+                    title="计次" value="计次">
+                <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.000">
+                <input type="button" onclick="reset_it()" onfocus="this.blur()" name="resetbutton" id="resetbutton"
+                    title="清除" value="清除">
+            </form>
+            <div id="split"></div>
+            <!-- <script type="text/javascript" async src="./stopwatch/miaobiao.js"></script> -->
+            <script>
+                var m_t = [0, 0, 0, 0, 0, 0, 0, 1];
+                var firstsplitflag = 0;
+                var splittime;
+                function stopstart() {
+                    m_t[m_t[2]] = (new Date()).valueOf();
+                    m_t[2] = 1 - m_t[2];
+                    if (0 == m_t[2]) {
+                        clearInterval(m_t[4]);
+                        m_t[3] += m_t[1] - m_t[0];
+                        document.getElementById("startstopbutton").value = "开始";
+                        document.getElementById("split").innerHTML += (m_t[7]++) + " 停止: " + format(m_t[1] - m_t[0]) + "<br />";
+                        m_t[4] = m_t[1] = m_t[0] = 0;
+                        disp();
+                        firstsplitflag = 0
+                    } else {
+                        document.getElementById("startstopbutton").value = "停止";
+                        m_t[4] = setInterval(disp, 43)
+                    }
+                }
+                function dosplit() {
+                    if (0 !== m_t[2]) {
+                        document.getElementById("split").innerHTML += (m_t[7]++) + " 计次: " + format(m_t[1] - m_t[0]) + "<br>"
+                    }
+                    var msg = new SpeechSynthesisUtterance(format4speak( m_t[1] - m_t[0]))
+                    //msg.rate = 4 播放语速
+                    //msg.pitch = 10 音调高低
+                    //msg.text = "播放文本"
+                    //msg.volume = 0.5 播放音量
+                    window.speechSynthesis.speak(msg);
+                }
+                function reset_it() {
+                    if (m_t[2]) {
+                        stopstart()
+                    }
+                    m_t[4] = m_t[3] = m_t[2] = m_t[1] = m_t[0] = 0;
+                    disp();
+                    document.getElementById("split").innerHTML = "";
+                    m_t[7] = 1
+                }
+
+                function disp() {
+                    if (m_t[2]) {
+                        m_t[1] = (new Date()).valueOf()
+                    }
+                    m_t[6].value = format(m_t[3] + m_t[1] - m_t[0])
+                }
+                function format(b) {
+                    var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1");
+                    var a = String(b % 1000);
+                    while (a.length < 3) {
+                        a = "0" + a
+                    }
+                    c += "." + a;
+                    return c
+                }
+                function format4speak(b) {
+                    return format(b).
+                            replace(/:0/g, ":").
+                            replace(":", "时").
+                            replace(":", "分").
+                            replace(/\..+/, "秒").
+                            replace("0时", "").
+                            replace("0分", "").
+                            replace("0秒", "").
+                            replace(/^0/, "")
+                }
+                function load() {
+                    m_t[5] = new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
+                    m_t[6] = document.getElementById("disp");
+                    disp()
+                }
+
+                load();
+
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
