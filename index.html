@@ -113,7 +113,7 @@
 			i.地址.split(',').forEach(
 				s => {
 					let length = app.l风险地区.filter(
-						e => e.addr.indexOf(s) > -1 || e.city.indexOf(s) > -1 || e.province.indexOf(s) > -1).length
+						e =>  e.city.indexOf(s) > -1 || e.province.indexOf(s) > -1).length//e.addr.indexOf(s) > -1 ||
 					app.地区风险数量[s] = length
 					sum += length
 				}
