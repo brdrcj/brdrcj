@@ -19,11 +19,12 @@
     <div id="main_content">
         <div id="miaobiao_k">
             <form name="stopwatch" id="stopwatch" title="Stopwatch">
+                <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.000">
+                    <br>
                 <input type="button" onclick="stopstart()" onfocus="this.blur()" name="startstopbutton"
                     id="startstopbutton" title="开始 / 停止" value="开始">
                 <input type="button" onclick="dosplit()" onfocus="this.blur()" name="splitbutton" id="splitbutton"
                     title="计次" value="计次">
-                <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.000">
                 <input type="button" onclick="reset_it()" onfocus="this.blur()" name="resetbutton" id="resetbutton"
                     title="清除" value="清除">
             </form>
@@ -54,10 +55,7 @@
                         document.getElementById("split").innerHTML += (m_t[7]++) + " 计次: " + format(m_t[1] - m_t[0]) + "<br>"
                     }
                     var msg = new SpeechSynthesisUtterance(format4speak( m_t[1] - m_t[0]))
-                    //msg.rate = 4 播放语速
-                    //msg.pitch = 10 音调高低
-                    //msg.text = "播放文本"
-                    //msg.volume = 0.5 播放音量
+                    msg.rate = 1.5
                     window.speechSynthesis.speak(msg);
                 }
                 function reset_it() {
@@ -87,13 +85,13 @@
                 }
                 function format4speak(b) {
                     return format(b).
-                            replace(/:0/g, ":").
+                            // replace(/:0/g, ":").
                             replace(":", "时").
                             replace(":", "分").
                             replace(/\..+/, "秒").
-                            replace("0时", "").
-                            replace("0分", "").
-                            replace("0秒", "").
+                            replace("00时", "").
+                            replace("00分", "").
+                            replace("00秒", "").
                             replace(/^0/, "")
                 }
                 function load() {
