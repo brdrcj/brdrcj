@@ -26,8 +26,7 @@
             color: white;
         }
 
-        input[type=button],
-        button {
+        input[type=button] {
             padding: 10px;
             margin: 5px;
             font-size: 22px;
@@ -77,12 +76,12 @@
                         clearInterval(m_t[4]);
                         m_t[3] += m_t[1] - m_t[0];
                         document.getElementById("startstopbutton").value = "开始";
-                        document.getElementById("split").innerHTML += (m_t[7]++) + " 停止: " + format(m_t[1] - m_t[0]) + "<br />";
+                        document.getElementById("split").innerHTML += (m_t[7]++) + " 暂停: " + format(m_t[1] - m_t[0]) + "<br />";
                         m_t[4] = m_t[1] = m_t[0] = 0;
                         disp();
                         firstsplitflag = 0
                     } else {
-                        document.getElementById("startstopbutton").value = "停止";
+                        document.getElementById("startstopbutton").value = "暂停";
                         m_t[4] = setInterval(disp, 80)
                     }
                 }
@@ -151,9 +150,10 @@
                 stopwatch = document.getElementById("stopwatch")
                 decodeURI(document.location.hash).replace("#", "").split(/[,，]/).forEach(name => {
 
-                    let b = document.createElement("button")
+                    let b = document.createElement("input")
+                    b.type = 'button'
                     b.onclick = () => dosplit(name)
-                    b.innerText = name
+                    b.value = name
                     stopwatch.appendChild(b)
                 })
             </script>
