@@ -37,15 +37,16 @@
 
 
         #disp {
-            font-size: 48px;
+            font-size: 52px;
             vertical-align: middle;
             text-align: center;
             background-color: #000;
             color: white;
             font-weight: 900;
-            border: 1px solid red;
-            padding: 10px;
-            margin: 10px;
+            border: 2px solid red;
+            padding: 15px;
+            line-height: 1em;
+            /* margin: 5px; */
         }
     </style>
 
@@ -72,6 +73,7 @@
                     m_t[m_t[2]] = (new Date()).valueOf();
                     m_t[2] = 1 - m_t[2];
                     if (0 == m_t[2]) {
+                        m_t[6].style.borderColor="red"
                         clearInterval(m_t[4]);
                         split_e.innerHTML += (m_t[7]++) + " 暂停: " + format() + "<br />";
                         speak("暂停")
@@ -80,6 +82,7 @@
                         m_t[4] = m_t[1] = m_t[0] = 0;
                         disp();
                     } else {
+                        m_t[6].style.borderColor="green"
                         if (m_t[3] == 0)
                             speak("开始")
                         else
