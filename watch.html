@@ -60,26 +60,30 @@
                 <input type="button" onclick="stopstart()" id="startstopbutton" value="开始">
                 <input type="button" onclick="dosplit('计次')" id="splitbutton" value="计次">
                 <input type="button" onclick="reset_it()" value="复位">
-                <input type="button" onclick='document.getElementById("split").innerHTML = "";m_t[7] = 1' value="清除">
+                <input type="button" onclick='split_e.innerHTML = "";m_t[7] = 1' value="清除">
                 <br>
             </form>
             <div id="split"></div>
             <!-- <script type="text/javascript" async src="./stopwatch/miaobiao.js"></script> -->
             <script>
                 var m_t = [0, 0, 0, 0, 0, 0, 0, 1];
+                split_e = document.getElementById("split")
                 function stopstart() {
                     m_t[m_t[2]] = (new Date()).valueOf();
                     m_t[2] = 1 - m_t[2];
                     if (0 == m_t[2]) {
                         clearInterval(m_t[4]);
-                        document.getElementById("split").innerHTML += (m_t[7]++) + " 暂停: " + format() + "<br />";
-                        speak("暂停" + format4speak())
+                        split_e.innerHTML += (m_t[7]++) + " 暂停: " + format() + "<br />";
+                        speak("暂停")
                         m_t[3] += m_t[1] - m_t[0];
-                        document.getElementById("startstopbutton").value = "开始";
+                        document.getElementById("startstopbutton").value = "继续";
                         m_t[4] = m_t[1] = m_t[0] = 0;
                         disp();
                     } else {
-                        speak("开始")
+                        if (m_t[3] == 0)
+                            speak("开始")
+                        else
+                            speak("继续")
                         document.getElementById("startstopbutton").value = "暂停";
                         m_t[4] = setInterval(disp, 80)
                     }
@@ -88,10 +92,10 @@
                     if (0 == m_t[2]) {
                         return
                     }
-                    document.getElementById("split").innerHTML += (m_t[7]++) + '.' + name + "\t" + format() + "<br>"
+                    split_e.innerHTML += (m_t[7]++) + '.' + name + "\t" + format() + "<br>"
                     speak((name == "计次" ? "" : name + " ") + format4speak())
                 }
-                speak=(s)=>{
+                speak = (s) => {
 
                     var msg = new SpeechSynthesisUtterance(s)
                     msg.rate = 1.5
@@ -99,8 +103,11 @@
                 }
                 function reset_it() {
                     if (m_t[2]) {
-                        stopstart()
+                        clearInterval(m_t[4]);
                     }
+                    split_e.innerHTML += (m_t[7]++) + " 复位: " + format() + "<br />";
+                    speak("复位")
+                    document.getElementById("startstopbutton").value = "开始";
                     m_t[4] = m_t[3] = m_t[2] = m_t[1] = m_t[0] = 0;
                     disp();
 
@@ -113,7 +120,7 @@
                     m_t[6].value = format()
                 }
                 function format() {
-                    let b=m_t[3] + m_t[1] - m_t[0]
+                    let b = m_t[3] + m_t[1] - m_t[0]
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1");
                     var a = String(parseInt((b % 1000) / 10));
                     while (a.length < 2) {
@@ -128,7 +135,7 @@
                     return [].map.call(num, e => changeNum[e]).join("")
                 }
                 function format4speak() {
-                    let b=m_t[3] + m_t[1] - m_t[0]
+                    let b = m_t[3] + m_t[1] - m_t[0]
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1") + "."
                     var a = String(parseInt((b % 1000) / 10));
                     while (a.length < 2) {
