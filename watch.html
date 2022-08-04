@@ -73,11 +73,13 @@
                     if (0 == m_t[2]) {
                         clearInterval(m_t[4]);
                         document.getElementById("split").innerHTML += (m_t[7]++) + " 暂停: " + format() + "<br />";
+                        speak("暂停" + format4speak())
                         m_t[3] += m_t[1] - m_t[0];
                         document.getElementById("startstopbutton").value = "开始";
                         m_t[4] = m_t[1] = m_t[0] = 0;
                         disp();
                     } else {
+                        speak("开始")
                         document.getElementById("startstopbutton").value = "暂停";
                         m_t[4] = setInterval(disp, 80)
                     }
@@ -87,7 +89,11 @@
                         return
                     }
                     document.getElementById("split").innerHTML += (m_t[7]++) + '.' + name + "\t" + format() + "<br>"
-                    var msg = new SpeechSynthesisUtterance((name == "计次" ? "" : name + " ") + format4speak())
+                    speak((name == "计次" ? "" : name + " ") + format4speak())
+                }
+                speak=(s)=>{
+
+                    var msg = new SpeechSynthesisUtterance(s)
                     msg.rate = 1.5
                     window.speechSynthesis.speak(msg);
                 }
