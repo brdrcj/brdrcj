@@ -18,12 +18,16 @@
 
         #split {
             font-size: 22px;
-            vertical-align: middle;
-            text-align: center;
+            text-align: left;
             font-weight: bold;
+            max-width: 15em;
+            margin: auto;
+
+            color: white;
         }
 
-        input[type=button] {
+        input[type=button],
+        button {
             padding: 10px;
             margin: 5px;
             font-size: 22px;
@@ -32,9 +36,6 @@
             font-weight: bold;
         }
 
-        #split {
-            color: white;
-        }
 
         #disp {
             font-size: 48px;
@@ -54,13 +55,14 @@
 <body>
     <div id="main_content">
         <div id="miaobiao_k">
-            <form name="stopwatch" id="stopwatch" title="Stopwatch">
+            <form id="stopwatch">
                 <input type="button" name="disp" id="disp" title="秒表" value="00:00:00.00">
                 <br>
                 <input type="button" onclick="stopstart()" id="startstopbutton" value="开始">
-                <input type="button" onclick="dosplit()" id="splitbutton" value="计次">
+                <input type="button" onclick="dosplit('计次')" id="splitbutton" value="计次">
                 <input type="button" onclick="reset_it()" value="复位">
                 <input type="button" onclick='document.getElementById("split").innerHTML = "";m_t[7] = 1' value="清除">
+                <br>
             </form>
             <div id="split"></div>
             <!-- <script type="text/javascript" async src="./stopwatch/miaobiao.js"></script> -->
@@ -81,14 +83,15 @@
                         firstsplitflag = 0
                     } else {
                         document.getElementById("startstopbutton").value = "停止";
-                        m_t[4] = setInterval(disp, 43)
+                        m_t[4] = setInterval(disp, 80)
                     }
                 }
-                function dosplit() {
-                    if (0 !== m_t[2]) {
-                        document.getElementById("split").innerHTML += (m_t[7]++) + " 计次: " + format(m_t[1] - m_t[0]) + "<br>"
+                function dosplit(name) {
+                    if (0 == m_t[2]) {
+                        return
                     }
-                    var msg = new SpeechSynthesisUtterance(format4speak(m_t[1] - m_t[0]))
+                    document.getElementById("split").innerHTML += (m_t[7]++) + '.' + name + "\t" + format(m_t[1] - m_t[0]) + "<br>"
+                    var msg = new SpeechSynthesisUtterance((name == "计次" ? "" : name + " ") + format4speak(m_t[1] - m_t[0]))
                     msg.rate = 1.5
                     window.speechSynthesis.speak(msg);
                 }
@@ -122,7 +125,7 @@
                     return [].map.call(num, e => changeNum[e]).join("")
                 }
                 function format4speak(b) {
-                    var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1")+"."
+                    var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1") + "."
                     var a = String(parseInt((b % 1000) / 10));
                     while (a.length < 2) {
                         a = "0" + a
@@ -145,7 +148,14 @@
                 }
 
                 load();
+                stopwatch = document.getElementById("stopwatch")
+                decodeURI(document.location.hash).replace("#", "").split(/[,，]/).forEach(name => {
 
+                    let b = document.createElement("button")
+                    b.onclick = () => dosplit(name)
+                    b.innerText = name
+                    stopwatch.appendChild(b)
+                })
             </script>
         </div>
     </div>
