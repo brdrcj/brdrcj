@@ -67,19 +67,16 @@
             <!-- <script type="text/javascript" async src="./stopwatch/miaobiao.js"></script> -->
             <script>
                 var m_t = [0, 0, 0, 0, 0, 0, 0, 1];
-                var firstsplitflag = 0;
-                var splittime;
                 function stopstart() {
                     m_t[m_t[2]] = (new Date()).valueOf();
                     m_t[2] = 1 - m_t[2];
                     if (0 == m_t[2]) {
                         clearInterval(m_t[4]);
+                        document.getElementById("split").innerHTML += (m_t[7]++) + " 暂停: " + format() + "<br />";
                         m_t[3] += m_t[1] - m_t[0];
                         document.getElementById("startstopbutton").value = "开始";
-                        document.getElementById("split").innerHTML += (m_t[7]++) + " 暂停: " + format(m_t[1] - m_t[0]) + "<br />";
                         m_t[4] = m_t[1] = m_t[0] = 0;
                         disp();
-                        firstsplitflag = 0
                     } else {
                         document.getElementById("startstopbutton").value = "暂停";
                         m_t[4] = setInterval(disp, 80)
@@ -89,8 +86,8 @@
                     if (0 == m_t[2]) {
                         return
                     }
-                    document.getElementById("split").innerHTML += (m_t[7]++) + '.' + name + "\t" + format(m_t[1] - m_t[0]) + "<br>"
-                    var msg = new SpeechSynthesisUtterance((name == "计次" ? "" : name + " ") + format4speak(m_t[1] - m_t[0]))
+                    document.getElementById("split").innerHTML += (m_t[7]++) + '.' + name + "\t" + format() + "<br>"
+                    var msg = new SpeechSynthesisUtterance((name == "计次" ? "" : name + " ") + format4speak())
                     msg.rate = 1.5
                     window.speechSynthesis.speak(msg);
                 }
@@ -107,9 +104,10 @@
                     if (m_t[2]) {
                         m_t[1] = (new Date()).valueOf()
                     }
-                    m_t[6].value = format(m_t[3] + m_t[1] - m_t[0])
+                    m_t[6].value = format()
                 }
-                function format(b) {
+                function format() {
+                    let b=m_t[3] + m_t[1] - m_t[0]
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1");
                     var a = String(parseInt((b % 1000) / 10));
                     while (a.length < 2) {
@@ -123,7 +121,8 @@
 
                     return [].map.call(num, e => changeNum[e]).join("")
                 }
-                function format4speak(b) {
+                function format4speak() {
+                    let b=m_t[3] + m_t[1] - m_t[0]
                     var c = new Date(b + m_t[5]).toString().replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, "$1") + "."
                     var a = String(parseInt((b % 1000) / 10));
                     while (a.length < 2) {
